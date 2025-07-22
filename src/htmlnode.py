@@ -15,7 +15,6 @@ class HTMLNode:
 
         for prop in self.props:
             html_str += f'{prop}="{self.props[prop]}" '
-        print(html_str)
         return html_str.rstrip()
 
     def __repr__(self) -> str:
