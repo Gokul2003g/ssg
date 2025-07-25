@@ -137,6 +137,44 @@ class TestInlineMarkdown(unittest.TestCase):
             new_nodes,
         )
 
+    def test_text_to_textnodes_basic(self):
+        node = "This is **text**"
+        expected = [
+            TextNode("This is ", TextType.NORMAL_TEXT),
+            TextNode("text", TextType.BOLD_TEXT),
+        ]
+        self.assertListEqual(expected, text_to_textnodes(node))
+
+    def test_text_with_italic(self):
+        node = "Here is _italic_ text"
+        expected = [
+            TextNode("Here is ", TextType.NORMAL_TEXT),
+            TextNode("italic", TextType.ITALIC_TEXT),
+            TextNode(" text", TextType.NORMAL_TEXT),
+        ]
+        self.assertListEqual(expected, text_to_textnodes(node))
+
+    def test_text_with_image_and_link(self):
+        node = "Image: ![img](url) and [link](url)"
+        expected = [
+            TextNode("Image: ", TextType.NORMAL_TEXT),
+            TextNode("img", TextType.IMAGE, "url"),
+            TextNode(" and ", TextType.NORMAL_TEXT),
+            TextNode("link", TextType.LINK, "url"),
+        ]
+        self.assertListEqual(expected, text_to_textnodes(node))
+
+    def test_combined_styles(self):
+        node = "**bold** and _italic_ and `code`"
+        expected = [
+            TextNode("bold", TextType.BOLD_TEXT),
+            TextNode(" and ", TextType.NORMAL_TEXT),
+            TextNode("italic", TextType.ITALIC_TEXT),
+            TextNode(" and ", TextType.NORMAL_TEXT),
+            TextNode("code", TextType.CODE_TEXT),
+        ]
+        self.assertListEqual(expected, text_to_textnodes(node))
+
     def test_text_to_textnodes(self):
         node = "This is **text** with an _italic_ word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
 
